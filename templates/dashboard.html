@@ -1,109 +1,149 @@
-{% extends "base.html" %}
-
-{% block title %}Dashboard | AI Services{% endblock %}
-
-{% block content %}
-<section class="dashboard-header">
-    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
-    <p>Welcome back, {{ user.username }}! Here's what's happening with your AI services.</p>
-</section>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-bolt"></i>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bemal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .upload-section {
+            margin: 30px 0;
+            padding: 30px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background: #5568d3; }
+        .results {
+            margin-top: 30px;
+        }
+        .result-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        .nav { margin-bottom: 20px; }
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/login">Login</a>
         </div>
-        <div class="stat-content">
-            <h3>API Usage</h3>
-            <p class="stat-value">1,245 calls</p>
-            <p class="stat-description">This month</p>
+        
+        <h1>📊 Dashboard</h1>
+        
+        <div class="upload-section" id="dropZone">
+            <h3>Upload CSV File</h3>
+            <p>Drag and drop or click to select</p>
+            <input type="file" id="fileInput" accept=".csv">
+            <button onclick="uploadCSV()">Process CSV</button>
         </div>
+        
+        <div class="results" id="results"></div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-brain"></i>
-        </div>
-        <div class="stat-content">
-            <h3>Tokens Processed</h3>
-            <p class="stat-value">542,893</p>
-            <p class="stat-description">Total tokens</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-clock"></i>
-        </div>
-        <div class="stat-content">
-            <h3>Response Time</h3>
-            <p class="stat-value">248ms</p>
-            <p class="stat-description">Average</p>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">
-            <i class="fas fa-crown"></i>
-        </div>
-        <div class="stat-content">
-            <h3>Your Plan</h3>
-            <p class="stat-value">{{ user.plan }}</p>
-            <p class="stat-description">Active</p>
-        </div>
-    </div>
-</div>
-
-<section class="recent-activity">
-    <h2><i class="fas fa-history"></i> Recent Activity</h2>
-    <div class="activity-list">
-        <div class="activity-item">
-            <div class="activity-icon success">
-                <i class="fas fa-check"></i>
-            </div>
-            <div class="activity-content">
-                <p>API call to text-completion model</p>
-                <small>2 minutes ago</small>
-            </div>
-        </div>
-
-        <div class="activity-item">
-            <div class="activity-icon warning">
-                <i class="fas fa-exclamation"></i>
-            </div>
-            <div class="activity-content">
-                <p>Approaching monthly quota limit (85%)</p>
-                <small>1 hour ago</small>
-            </div>
-        </div>
-
-        <div class="activity-item">
-            <div class="activity-icon">
-                <i class="fas fa-code"></i>
-            </div>
-            <div class="activity-content">
-                <p>New API key generated</p>
-                <small>3 hours ago</small>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="quick-actions">
-    <h2><i class="fas fa-rocket"></i> Quick Actions</h2>
-    <div class="action-buttons">
-        <a href="{{ url_for('features') }}" class="action-btn">
-            <i class="fas fa-magic"></i>
-            <span>Explore Features</span>
-        </a>
-        <a href="{{ url_for('account') }}" class="action-btn">
-            <i class="fas fa-key"></i>
-            <span>API Keys</span>
-        </a>
-        <a href="{{ url_for('pricing') }}" class="action-btn">
-            <i class="fas fa-tag"></i>
-            <span>Upgrade Plan</span>
-        </a>
-    </div>
-</section>
-{% endblock %}
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                document.getElementById('fileInput').files = files;
+            }
+        });
+        
+        async function uploadCSV() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file first');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Processing...</p>';
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    let html = '<h3>Results:</h3>';
+                    data.results.forEach((result, i) => {
+                        html += `<div class="result-item">
+                            <strong>${result.name}</strong> (${result.company})<br>
+                            Status: ${result.status}<br>
+                            ${result.generated_email ? '<pre>' + result.generated_email.substring(0, 200) + '...</pre>' : ''}
+                            ${result.error ? '<span style="color:red">' + result.error + '</span>' : ''}
+                        </div>`;
+                    });
+                    resultsDiv.innerHTML = html;
+                } else {
+                    resultsDiv.innerHTML = '<p style="color:red">Error: ' + data.error + '</p>';
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = '<p style="color:red">Error: ' + err.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
