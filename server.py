@@ -1,52 +1,113 @@
 #!/usr/bin/env python3
 """
-Bemal - Simple Working Flask Server
-No complex dependencies, just a working GUI
+Bemal - AI Email Outreach Server
+Complete with dashboard, history, and auto-start API
 """
 
 import os
-from flask import Flask, render_template, request, jsonify
+import csv
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from extensions import db
+from models import EmailLog, Prospect
 
+# Load environment variables
 load_dotenv()
 
-app = Flask(__name__, template_folder='templates', static_folder='static')
-app.secret_key = os.getenv('SECRET_KEY', os.urandom(24))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'uploads'
-
-db = SQLAlchemy(app)
-os.makedirs('uploads', exist_ok=True)
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/generate', methods=['POST'])
-def generate():
-    """Mock email generation"""
-    data = request.json
-    name = data.get('name', 'Unknown')
-    company = data.get('company', 'Unknown')
-    role = data.get('role', 'Unknown')
+def create_app():
+    app = Flask(__name__, template_folder='templates', static_folder='static')
     
-    email = f"""Subject: Quick question about {company}
+    # Configuration
+    app.secret_key = os.getenv('SECRET_KEY', os.urandom(24))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bemal.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['UPLOAD_FOLDER'] = 'uploads'
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+    
+    # Initialize extensions
+    db.init_app(app)
+    
+    # Create tables
+    with app.app_context():
+        db.create_all()
+    
+    # Ensure upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
+    # ============ ROUTES ============
+    
+    @app.route('/')
+    def home():
+        # Get stats for dashboard
+        stats = get_dashboard_stats()
+        return render_template('dashboard.html', stats=stats)
+    
+    @app.route('/dashboard')
+    def dashboard():
+        stats = get_dashboard_stats()
+        return render_template('dashboard.html', stats=stats)
+    
+    @app.route('/history')
+    def history():
+        """View all sent emails with filtering"""
+        filter_type = request.args.get('filter', 'all')  # all, today, week, month
+        
+        # Calculate date range
+        now = datetime.utcnow()
+        if filter_type == 'today':
+            start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif filter_type == 'week':
+            start_date = now - timedelta(days=now.weekday() + 1)
+            start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif filter_type == 'month':
+            start_date = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        else:
+            start_date = None
+        
+        # Query emails
+        query = EmailLog.query.order_by(EmailLog.created_at.desc())
+        if start_date:
+            query = query.filter(EmailLog.created_at >= start_date)
+        
+        emails = query.all()
+        stats = get_dashboard_stats()
+        
+        return render_template('history.html', emails=emails, stats=stats, filter_type=filter_type)
+    
+    @app.route('/generate', methods=['POST'])
+    def generate():
+        """Generate email for a single prospect"""
+        try:
+            data = request.json
+            prospect_data = {
+                'name': data.get('name', 'Unknown'),
+                'company': data.get('company', 'Unknown'),
+                'role': data.get('role', 'Unknown'),
+                'website': data.get('website', ''),
+                'email': data.get('email', '')
+            }
+            
+            # Save prospect
+            prospect = Prospect()
+            prospect.name = prospect_data['name']
+            prospect.company = prospect_data['company']
+            prospect.role = prospect_data['role']
+            prospect.website = prospect_data['website']
+            prospect.email = prospect_data['email']
+            db.session.add(prospect)
+            db.session.commit()
+            
+            # Generate email content (mock for now)
+            email_content = f"""Subject: Quick question about {prospect_data['company']}
 
-Hi {name},
+Hi {prospect_data['name']},
 
-I noticed you're the {role} at {company} and wanted to reach out.
+I noticed you're the {prospect_data['role']} at {prospect_data['company']} and wanted to reach out.
 
-We've been helping companies like {company} streamline their operations and reduce costs by 30%.
+We've been helping companies like {prospect_data['company']} streamline their operations and reduce costs by 30%.
 
 Would you be open to a quick 15-minute chat next week?
 
@@ -54,21 +115,147 @@ Best regards,
 Your Team
 
 ---
-This email was generated by Bemal AI"""
+Generated by Bemal AI"""
+            
+            return jsonify({
+                'success': True, 
+                'email': email_content,
+                'prospect_id': prospect.id
+            })
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'error': str(e)}), 500
+    
+    @app.route('/send', methods=['POST'])
+    def send():
+        """Send email and log it"""
+        try:
+            data = request.json
+            to_email = data.get('email')
+            subject = data.get('subject', 'No subject')
+            body = data.get('body', '')
+            
+            if not to_email:
+                return jsonify({'success': False, 'error': 'No email provided'}), 400
+            
+            # Here you would integrate actual SMTP sending
+            # For now, we'll just log it
+            email_log = EmailLog(
+                recipient=to_email,
+                subject=subject,
+                body=body,
+                status='sent'
+            )
+            db.session.add(email_log)
+            db.session.commit()
+            
+            return jsonify({'success': True, 'message': 'Email logged (not actually sent in demo mode)'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'error': str(e)}), 500
+    
+    @app.route('/upload', methods=['POST'])
+    def upload_csv():
+        """Process CSV file with prospects"""
+        try:
+            if 'file' not in request.files:
+                return jsonify({'success': False, 'error': 'No file uploaded'}), 400
+            
+            file = request.files['file']
+            if not file.filename:
+                return jsonify({'success': False, 'error': 'No file selected'}), 400
+            
+            if file.filename.endswith('.csv'):
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                
+                results = []
+                with open(filepath, 'r') as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        try:
+                            # Save prospect
+                            prospect = Prospect(
+                                name=row.get('name', ''),
+                                company=row.get('company', ''),
+                                role=row.get('role', ''),
+                                website=row.get('website', ''),
+                                email=row.get('email', '')
+                            )
+                            db.session.add(prospect)
+                            db.session.commit()
+                            
+                            # Generate email
+                            email_content = f"Subject: Quick question about {row.get('company', '')}\n\nHi {row.get('name', '')},...\n"
+                            
+                            results.append({
+                                'name': row.get('name', ''),
+                                'company': row.get('company', ''),
+                                'email': row.get('email', ''),
+                                'generated_email': email_content,
+                                'status': 'success',
+                                'prospect_id': prospect.id
+                            })
+                        except Exception as e:
+                            results.append({
+                                'name': row.get('name', ''),
+                                'status': 'error',
+                                'error': str(e)
+                            })
+                
+                db.session.commit()
+                os.remove(filepath)
+                return jsonify({'success': True, 'results': results, 'count': len(results)})
+            else:
+                return jsonify({'success': False, 'error': 'Invalid file type'}), 400
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'success': False, 'error': str(e)}), 500
+    
+    @app.route('/api/stats')
+    def api_stats():
+        """API endpoint for dashboard stats"""
+        return jsonify(get_dashboard_stats())
+    
+    return app
 
-    return jsonify({'success': True, 'email': email})
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    """Mock CSV processing"""
-    return jsonify({
-        'success': True,
-        'results': [
-            {'name': 'Test User', 'company': 'Test Corp', 'status': 'success', 'generated_email': 'Test email content...'}
-        ]
-    })
+def get_dashboard_stats():
+    """Get dashboard statistics"""
+    now = datetime.utcnow()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_start = today_start - timedelta(days=now.weekday())
+    
+    # Email stats
+    emails_total = EmailLog.query.count()
+    emails_today = EmailLog.query.filter(EmailLog.created_at >= today_start).count()
+    emails_week = EmailLog.query.filter(EmailLog.created_at >= week_start).count()
+    
+    # Prospect stats
+    prospects_total = Prospect.query.count()
+    prospects_today = Prospect.query.filter(Prospect.created_at >= today_start).count()
+    
+    # Success rate
+    sent_count = EmailLog.query.filter_by(status='sent').count()
+    failed_count = EmailLog.query.filter_by(status='failed').count()
+    total_count = sent_count + failed_count
+    success_rate = (sent_count / total_count * 100) if total_count > 0 else 0
+    
+    return {
+        'emails_total': emails_total,
+        'emails_today': emails_today,
+        'emails_week': emails_week,
+        'prospects_total': prospects_total,
+        'prospects_today': prospects_today,
+        'sent_count': sent_count,
+        'failed_count': failed_count,
+        'success_rate': round(success_rate, 1)
+    }
 
 if __name__ == '__main__':
     print("🚀 Bemal Server starting...")
-    print("📍 Open http://localhost:5000")
+    print("📊 Dashboard: http://localhost:5000")
+    print("📧 Email History: http://localhost:5000/history")
+    print("📈 API Stats: http://localhost:5000/api/stats")
+    app = create_app()
     app.run(debug=True, host='0.0.0.0', port=5000)
