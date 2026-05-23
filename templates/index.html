@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon AI Email Outreach</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            backdrop-filter: blur(16px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            border-radius: 0.25rem;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 3px solid var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid var(--error);
+        }
+
+        .email-preview {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            white-space: pre-wrap;
+            border-left: 3px solid var(--primary);
+        }
+
+        .activity-log {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-content {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .activity-email {
+            font-weight: 500;
+        }
+
+        .activity-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .connection-status {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .connection-online {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .connection-offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .drop-area {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .drop-area.highlight {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-table th {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-paper-plane"></i> Neon AI Outreach</h1>
+            <p class="subtitle">Generate and send personalized emails at scale</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Compose Email</h2>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="single">Single Email</button>
+                    <button class="tab-btn" data-tab="batch">Batch Process</button>
+                </div>
+
+                <div id="single" class="tab-content active">
+                    <form id="singleForm">
+                        <div class="form-group">
+                            <label for="recipient-name">Recipient Name</label>
+                            <input type="text" id="recipient-name" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recipient-email">Recipient Email</label>
+                            <input type="email" id="recipient-email" placeholder="john@example.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" placeholder="Acme Inc" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <input type="text" id="role" placeholder="CEO">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="purpose">Purpose</label>
+                            <select id="purpose" required>
+                                <option value="networking">Networking</option>
+                                <option value="sales">Sales Outreach</option>
+                                <option value="partnership">Partnership</option>
+                                <option value="job">Job Opportunity</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="context">Additional Context</label>
+                            <textarea id="context" placeholder="Any specific information to include..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn" id="generateBtn">
+                                <span id="generateBtnText">Generate & Send</span>
+                                <span id="generateSpinner" class="spinner"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="emailPreview" class="email-preview" style="display: none;">
+                        <h4>Generated Email Preview</h4>
+                        <div id="previewContent"></div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <button id="sendBtn" class="btn">Send Now</button>
+                            <button id="editBtn" class="btn-secondary">Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="batch" class="tab-content">
+                    <form id="batchForm">
+                        <div class="form-group">
+                            <label for="csvFile">Upload CSV File</label>
+                            <div class="drop-area" id="dropArea">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                <p>Drag & drop your CSV file here</p>
+                                <p style="font-size: 0.9rem; color: var(--gray);">or click to browse</p>
+                            </div>
+                            <input type="file" id="csvFile" accept=".csv" style="display: none;">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn" id="processBtn">
+                                <span id="processBtnText">Process CSV</span>
+                                <span id="processSpinner" class="spinner"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="batchResults" style="display: none;">
+                        <h4>Batch Processing Results</h4>
+                        <div class="results-table-container" style="overflow-x: auto;">
+                            <table class="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="alert" class="alert"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Activity Log</h2>
+                    <button id="clearLogBtn" class="btn-secondary">Clear Log</button>
+                </div>
+
+                <div class="activity-log" id="activityLog">
+                    <div class="empty-log">No activity yet. Generated emails will appear here.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="connectionStatus" class="connection-status connection-offline">
+        <i class="fas fa-circle"></i>
+        <span>Checking server connection...</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const singleForm = document.getElementById('singleForm');
+        const batchForm = document.getElementById('batchForm');
+        const generateBtn = document.getElementById('generateBtn');
+        const generateBtnText = document.getElementById('generateBtnText');
+        const generateSpinner = document.getElementById('generateSpinner');
+        const processBtn = document.getElementById('processBtn');
+        const processBtnText = document.getElementById('processBtnText');
+        const processSpinner = document.getElementById('processSpinner');
+        const alertDiv = document.getElementById('alert');
+        const activityLog = document.getElementById('activityLog');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const dropArea = document.getElementById('dropArea');
+        const csvFileInput = document.getElementById('csvFile');
+        const emailPreview = document.getElementById('emailPreview');
+        const previewContent = document.getElementById('previewContent');
+        const sendBtn = document.getElementById('sendBtn');
+        const editBtn = document.getElementById('editBtn');
+        const batchResults = document.getElementById('batchResults');
+        const resultsBody = document.getElementById('resultsBody');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            checkServerConnection();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', switchTab);
+            });
+
+            // Single email form
+            singleForm.addEventListener('submit', handleSingleSubmit);
+
+            // Batch processing form
+            batchForm.addEventListener('submit', handleBatchSubmit);
+
+            // File drop area
+            dropArea.addEventListener('click', () => csvFileInput.click());
+            csvFileInput.addEventListener('change', handleFileSelect);
+
+            // Drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            // Clear log button
+            document.getElementById('clearLogBtn').addEventListener('click', clearActivityLog);
+        }
+
+        // Tab Switching
+        function switchTab(e) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            e.target.classList.add('active');
+            document.getElementById(e.target.dataset.tab).classList.add('active');
+        }
+
+        // Connection Monitoring
+        async function checkServerConnection() {
+            try {
+                // Try to access the generate endpoint to check if server is available
+                const response = await fetch('/generate', {
+                    method: 'OPTIONS', // Use OPTIONS to avoid actual processing
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                // If we get any response, consider the server online
+                updateConnectionStatus(true);
+                return true;
+            } catch (error) {
+                updateConnectionStatus(false);
+                return false;
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                connectionStatus.className = 'connection-status connection-online';
+                connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Connected to server</span>';
+            } else {
+                connectionStatus.className = 'connection-status connection-offline';
+                connectionStatus.innerHTML = '<i class="fas fa-circle"></i><span>Server disconnected</span>';
+            }
+        }
+
+        // File Handling
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight() {
+            dropArea.classList.add('highlight');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('highlight');
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            if (files.length && files[0].name.endsWith('.csv')) {
+                dropArea.innerHTML = `
+                    <i class="fas fa-file-csv" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <p>${files[0].name}</p>
+                    <p style="font-size: 0.9rem; color: var(--gray);">${(files[0].size / 1024).toFixed(1)} KB</p>
+                `;
+            }
+        }
+
+        // API Requests
+        async function makeApiRequest(endpoint, method, data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(endpoint, options);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+
+                // Try to parse as JSON
+                try {
+                    return await response.json();
+                } catch (jsonError) {
+                    throw new Error('Invalid JSON response from server');
+                }
+            } catch (error) {
+                console.error('API request failed:', error);
+                throw error;
+            }
+        }
+
+        // Form Handlers
+        async function handleSingleSubmit(e) {
+            e.preventDefault();
+
+            // Show loading state
+            generateBtn.disabled = true;
+            generateBtnText.textContent = 'Generating...';
+            generateSpinner.style.display = 'inline-block';
+            alertDiv.style.display = 'none';
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('recipient-name').value,
+                email: document.getElementById('recipient-email').value,
+                company: document.getElementById('company').value,
+                role: document.getElementById('role').value,
+                purpose: document.getElementById('purpose').value,
+                context: document.getElementById('context').value,
+                send_email: false // We'll handle sending separately
+            };
+
+            try {
+                // Generate email using your /generate endpoint
+                const result = await makeApiRequest('/generate', 'POST', formData);
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                // Show preview
+                previewContent.textContent = result.email;
+                emailPreview.style.display = 'block';
+
+                // Set up send button
+                sendBtn.onclick = async () => {
+                    try {
+                        sendBtn.disabled = true;
+                        sendBtn.textContent = 'Sending...';
+
+                        // Send email using your /send-email endpoint
+                        const emailContent = result.email;
+                        const subject = emailContent.split('\n')[0].replace('Subject: ', '');
+                        const body = emailContent.split('\n').slice(1).join('\n');
+
+                        const sendResult = await makeApiRequest('/send-email', 'POST', {
+                            to_email: formData.email,
+                            subject: subject,
+                            body: body
+                        });
+
+                        if (sendResult.error) {
+                            throw new Error(sendResult.error);
+                        }
+
+                        // Log activity
+                        logActivity({
+                            email: formData.email,
+                            status: 'sent',
+                            message: 'Email sent successfully'
+                        });
+
+                        showAlert('Email sent successfully!', 'success');
+                        emailPreview.style.display = 'none';
+                        singleForm.reset();
+                    } catch (error) {
+                        showAlert(`Failed to send email: ${error.message}`, 'error');
+                        logActivity({
+                            email: formData.email,
+                            status: 'error',
+                            message: `Failed to send: ${error.message}`
+                        });
+                        sendBtn.disabled = false;
+                        sendBtn.textContent = 'Send Now';
+                    }
+                };
+
+                // Set up edit button
+                editBtn.onclick = () => {
+                    emailPreview.style.display = 'none';
+                };
+
+                // Log generation
+                logActivity({
+                    email: formData.email,
+                    status: 'generated',
+                    message: 'Email generated successfully'
+                });
+
+            } catch (error) {
+                showAlert(`Failed to generate email: ${error.message}`, 'error');
+                logActivity({
+                    email: formData.email,
+                    status: 'error',
+                    message: `Generation failed: ${error.message}`
+                });
+            } finally {
+                generateBtn.disabled = false;
+                generateBtnText.textContent = 'Generate & Send';
+                generateSpinner.style.display = 'none';
+            }
+        }
+
+        async function handleBatchSubmit(e) {
+            e.preventDefault();
+
+            const file = csvFileInput.files[0];
+            if (!file) {
+                showAlert('Please select a CSV file first', 'error');
+                return;
+            }
+
+            // Show loading state
+            processBtn.disabled = true;
+            processBtnText.textContent = 'Processing...';
+            processSpinner.style.display = 'inline-block';
+            alertDiv.style.display = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('csv_file', file);
+
+                // Use your existing /generate endpoint which handles CSV files
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                // Display results
+                displayBatchResults(result.results || []);
+
+                // Log batch activity
+                logActivity({
+                    email: 'Batch Process',
+                    status: 'completed',
+                    message: `Processed ${result.results ? result.results.length : 0} records`
+                });
+
+                showAlert(`Batch processing completed! Processed ${result.results ? result.results.length : 0} records`, 'success');
+
+            } catch (error) {
+                showAlert(`Batch processing failed: ${error.message}`, 'error');
+                logActivity({
+                    email: 'Batch Process',
+                    status: 'error',
+                    message: `Processing failed: ${error.message}`
+                });
+            } finally {
+                processBtn.disabled = false;
+                processBtnText.textContent = 'Process CSV';
+                processSpinner.style.display = 'none';
+            }
+        }
+
+        function displayBatchResults(results) {
+            resultsBody.innerHTML = '';
+            batchResults.style.display = 'block';
+
+            if (!results || results.length === 0) {
+                resultsBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray);">No results found</td></tr>';
+                return;
+            }
+
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                
+                let statusClass = '';
+                let statusText = '';
+                
+                if (result.status && result.status.toLowerCase().includes('sent')) {
+                    statusClass = 'status-success';
+                    statusText = 'Sent';
+                } else if (result.status && result.status.toLowerCase().includes('fail')) {
+                    statusClass = 'status-error';
+                    statusText = 'Failed';
+                } else {
+                    statusClass = 'status-warning';
+                    statusText = result.status || 'Unknown';
+                }
+
+                row.innerHTML = `
+                    <td>${result.prospect?.name || 'N/A'}</td>
+                    <td>${result.prospect?.email || 'N/A'}</td>
+                    <td><span class="activity-status ${statusClass}">${statusText}</span></td>
+                    <td>${result.status || result.message || ''}</td>
+                `;
+                
+                resultsBody.appendChild(row);
+            });
+        }
+
+        // Activity Log
+        function logActivity(activity) {
+            // Remove empty message if exists
+            const emptyLog = activityLog.querySelector('.empty-log');
+            if (emptyLog) {
+                activityLog.removeChild(emptyLog);
+            }
+
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+
+            let statusClass = '';
+            if (activity.status === 'sent' || activity.status === 'completed' || activity.status === 'generated') {
+                statusClass = 'status-success';
+            } else if (activity.status === 'error') {
+                statusClass = 'status-error';
+            } else {
+                statusClass = 'status-warning';
+            }
+
+            activityItem.innerHTML = `
+                <div class="activity-time">${new Date().toLocaleString()}</div>
+                <div class="activity-content">
+                    <div class="activity-email">${activity.email}</div>
+                    <div class="activity-status ${statusClass}">${activity.message}</div>
+                </div>
+            `;
+
+            activityLog.insertBefore(activityItem, activityLog.firstChild);
+        }
+
+        function clearActivityLog() {
+            activityLog.innerHTML = '<div class="empty-log">No activity yet. Generated emails will appear here.</div>';
+        }
+
+        // Alert
+        function showAlert(message, type) {
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.display = 'block';
+
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

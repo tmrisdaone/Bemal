@@ -1,0 +1,9 @@
+ 	Task	Responder	sender_entity	sender_name	recipient	block	tool_type	tool	content
+*	Personalizer	Entity.SYSTEM	Entity.SYSTEM	Personalizer		None			Create a 3-4 line email with: 1. Personal hook about Roblox inc 2. Value proposition 3. Clear CTA
+*	Personalizer	Entity.USER	Entity.USER	Personalizer		None			Find info about: 1. Roblox inc 2. David baziki Ceo site:linkedin.com/in
+ 	Personalizer	Entity.USER	Entity.USER	Entity.USER		None			[CANNOT RESPOND]
+ 	Personalizer	Entity.AGENT	Entity.USER			None			
+*	Personalizer	Entity.LLM	Entity.LLM			None			Here's the information you requested: **1. Roblox Inc** Roblox Inc is an America... Would you be open to a quick call to discuss further? Best regards, [Your Name]
+*	Personalizer	Entity.USER	Entity.USER			None			l
+ 	Personalizer	Entity.AGENT	Entity.USER			None			
+*	Personalizer	Entity.LLM	Entity.LLM			None			It seems like you accidentally sent a single character "l". Could you please cla...r provide more context about what you meant to ask or discuss? I'm here to help!

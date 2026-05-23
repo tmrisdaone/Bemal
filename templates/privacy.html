@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Neon Outreach</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .policy-section {
+            border-left: 4px solid #6366f1;
+            transition: all 0.3s ease;
+        }
+        .policy-section:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-paper-plane text-indigo-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">Neon Outreach</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="{{ url_for('home') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Back to App</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="gradient-bg text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                Privacy Policy
+            </h1>
+            <p class="mt-4 text-xl max-w-3xl mx-auto">
+                Effective Date: August 17, 2025
+            </p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="p-6 sm:p-10 space-y-8">
+                <!-- Introduction -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <p class="text-gray-600">
+                        Neon Outreach ("we", "us", or "our") respects your privacy. This policy explains how we collect, use, 
+                        and protect your personal information when you use our AI-powered outreach platform.
+                    </p>
+                </div>
+
+                <!-- 1. Information We Collect -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">1. Information We Collect</h2>
+                    <div class="mt-4 space-y-4 text-gray-600">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 text-indigo-500 mr-2 mt-1">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Account Information</h3>
+                                <p class="mt-1">Name, email address, password (hashed), and payment details when you register.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 text-indigo-500 mr-2 mt-1">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Prospect Data</h3>
+                                <p class="mt-1">Contact information of prospects you upload for outreach campaigns.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 text-indigo-500 mr-2 mt-1">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">Usage Data</h3>
+                                <p class="mt-1">How you interact with our platform (pages visited, features used).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. How We Use Information -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">2. How We Use Information</h2>
+                    <div class="mt-4 grid gap-4 md:grid-cols-2">
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-indigo-700 flex items-center">
+                                <i class="fas fa-cogs mr-2"></i> Service Operation
+                            </h3>
+                            <ul class="mt-2 ml-2 text-gray-600 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Provide and maintain our service</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Process transactions</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Generate personalized outreach content</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-indigo-700 flex items-center">
+                                <i class="fas fa-shield-alt mr-2"></i> Improvements & Security
+                            </h3>
+                            <ul class="mt-2 ml-2 text-gray-600 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Improve our AI models</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Prevent fraud and abuse</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-indigo-500 mr-2 mt-1"></i>
+                                    <span>Comply with legal obligations</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Data Sharing -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">3. Data Sharing</h2>
+                    <div class="mt-4 space-y-4 text-gray-600">
+                        <p>We do not sell your personal data. We may share information with:</p>
+                        <ul class="list-disc ml-6 space-y-2">
+                            <li><strong>Service Providers:</strong> Payment processors, hosting services, and analytics providers</li>
+                            <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+                            <li><strong>Business Transfers:</strong> In case of merger, acquisition, or asset sale</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 4. Data Security -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">4. Data Security</h2>
+                    <div class="mt-4 space-y-4 text-gray-600">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 h-6 w-6 text-green-500 mr-2 mt-1">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div>
+                                <p>We implement industry-standard security measures including:</p>
+                                <ul class="list-disc ml-6 mt-2 space-y-1">
+                                    <li>End-to-end encryption</li>
+                                    <li>Regular security audits</li>
+                                    <li>Access controls</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Your Rights -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">5. Your Rights</h2>
+                    <div class="mt-4 space-y-4 text-gray-600">
+                        <p>You may:</p>
+                        <div class="grid gap-4 sm:grid-cols-2 mt-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-medium flex items-center">
+                                    <i class="fas fa-download text-indigo-500 mr-2"></i> Access & Portability
+                                </h3>
+                                <p class="mt-2 text-sm">Request a copy of your data in machine-readable format</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-medium flex items-center">
+                                    <i class="fas fa-edit text-indigo-500 mr-2"></i> Correction
+                                </h3>
+                                <p class="mt-2 text-sm">Update or correct inaccurate information</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-medium flex items-center">
+                                    <i class="fas fa-trash-alt text-indigo-500 mr-2"></i> Deletion
+                                </h3>
+                                <p class="mt-2 text-sm">Request deletion of your personal data</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h3 class="font-medium flex items-center">
+                                    <i class="fas fa-ban text-indigo-500 mr-2"></i> Opt-Out
+                                </h3>
+                                <p class="mt-2 text-sm">Opt-out of marketing communications</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Changes to This Policy -->
+                <div class="policy-section pl-6 py-4 rounded">
+                    <h2 class="text-2xl font-bold text-gray-900">6. Changes to This Policy</h2>
+                    <p class="mt-4 text-gray-600">
+                        We may update this policy. We'll notify you of significant changes via email or in-app notice.
+                    </p>
+                </div>
+
+                <!-- Contact -->
+                <div class="bg-indigo-50 p-6 rounded-lg mt-8">
+                    <h3 class="text-lg font-medium text-indigo-700 flex items-center">
+                        <i class="fas fa-envelope mr-2"></i> Contact Us
+                    </h3>
+                    <p class="mt-2 text-gray-600">
+                        For privacy-related questions, contact our Data Protection Officer at:<br>
+                        <a href="mailto:privacy@neonoutreach.com" class="text-indigo-600 hover:underline">
+                            privacy@neonoutreach.com
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 mt-12">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-base text-gray-400">&copy; 2025 Neon Outreach. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

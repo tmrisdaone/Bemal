@@ -1,0 +1,11 @@
+flask
+flask-login
+flask-sqlalchemy
+langroid
+pydantic
+python-dotenv
+werkzeug
+email-validator
+streamlit
+fire
+rich

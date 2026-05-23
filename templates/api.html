@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content same as previous templates -->
+    <title>API | Neon Outreach</title>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation same as previous templates -->
+
+    <div class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                API Reference
+            </h1>
+            <p class="mt-6 text-xl max-w-3xl mx-auto">
+                Build custom integrations with our powerful API
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+            <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    API Endpoints
+                </h3>
+            </div>
+            <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+                <dl class="sm:divide-y sm:divide-gray-200">
+                    <!-- Campaigns -->
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Campaigns
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="bg-gray-800 text-green-400 p-3 rounded-md font-mono text-sm mb-2">
+                                POST /v1/campaigns
+                            </div>
+                            <div class="bg-gray-800 text-green-400 p-3 rounded-md font-mono text-sm">
+                                GET /v1/campaigns/{id}
+                            </div>
+                        </dd>
+                    </div>
+                    
+                    <!-- Contacts -->
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Contacts
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <div class="bg-gray-800 text-green-400 p-3 rounded-md font-mono text-sm mb-2">
+                                POST /v1/contacts
+                            </div>
+                            <div class="bg-gray-800 text-green-400 p-3 rounded-md font-mono text-sm">
+                                GET /v1/contacts/{id}
+                            </div>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Example Request
+                </h3>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+                <pre class="bg-gray-800 text-gray-300 p-4 rounded-md overflow-x-auto text-sm">
+<code>{
+  "campaign": {
+    "name": "Summer Promotion",
+    "template_id": "tmpl_1234",
+    "recipients": [
+      {
+        "email": "prospect@example.com",
+        "name": "John Doe",
+        "custom_fields": {
+          "company": "Acme Inc"
+        }
+      }
+    ],
+    "schedule": {
+      "send_at": "2025-08-20T10:00:00Z"
+    }
+  }
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer same as previous templates -->
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content same as previous templates -->
+    <title>Features | Neon Outreach</title>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation same as previous templates -->
+
+    <div class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                Powerful Features
+            </h1>
+            <p class="mt-6 text-xl max-w-3xl mx-auto">
+                Everything you need to scale your outreach
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid md:grid-cols-2 gap-12">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <div class="flex items-center mb-6">
+                    <div class="flex-shrink-0 bg-indigo-100 p-3 rounded-full">
+                        <i class="fas fa-robot text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="ml-4 text-2xl font-bold text-gray-900">AI-Powered Personalization</h3>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    Our AI analyzes each prospect's digital footprint to craft perfectly personalized emails that get responses.
+                </p>
+                <ul class="space-y-3 text-gray-600">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Automatic research from LinkedIn, company websites, and more</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Dynamic template variables for hyper-relevant messaging</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Sentiment analysis to optimize tone</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <div class="flex items-center mb-6">
+                    <div class="flex-shrink-0 bg-indigo-100 p-3 rounded-full">
+                        <i class="fas fa-users text-indigo-600 text-xl"></i>
+                    </div>
+                    <h3 class="ml-4 text-2xl font-bold text-gray-900">Batch Processing</h3>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    Upload hundreds of prospects at once and generate personalized emails in minutes.
+                </p>
+                <ul class="space-y-3 text-gray-600">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>CSV/Excel import with automatic field mapping</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>LinkedIn profile scraping</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Bulk email verification</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- More features continue in same pattern -->
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-indigo-700">
+        <div class="max-w-2xl mx-auto py-16 px-4 text-center sm:py-20 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                <span class="block">Ready to transform your outreach?</span>
+            </h2>
+            <p class="mt-4 text-lg leading-6 text-indigo-200">
+                Start your free 14-day trial today. No credit card required.
+            </p>
+            <a href="{{ url_for('register') }}" class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 sm:w-auto">
+                Get Started Free
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer same as previous templates -->
+</body>
+</html>

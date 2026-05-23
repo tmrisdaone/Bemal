@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AI Services{% endblock %}
+
+{% block content %}
+<section class="dashboard-header">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <p>Welcome back, {{ user.username }}! Here's what's happening with your AI services.</p>
+</section>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="stat-content">
+            <h3>API Usage</h3>
+            <p class="stat-value">1,245 calls</p>
+            <p class="stat-description">This month</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="stat-content">
+            <h3>Tokens Processed</h3>
+            <p class="stat-value">542,893</p>
+            <p class="stat-description">Total tokens</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+            <h3>Response Time</h3>
+            <p class="stat-value">248ms</p>
+            <p class="stat-description">Average</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-crown"></i>
+        </div>
+        <div class="stat-content">
+            <h3>Your Plan</h3>
+            <p class="stat-value">{{ user.plan }}</p>
+            <p class="stat-description">Active</p>
+        </div>
+    </div>
+</div>
+
+<section class="recent-activity">
+    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+    <div class="activity-list">
+        <div class="activity-item">
+            <div class="activity-icon success">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="activity-content">
+                <p>API call to text-completion model</p>
+                <small>2 minutes ago</small>
+            </div>
+        </div>
+
+        <div class="activity-item">
+            <div class="activity-icon warning">
+                <i class="fas fa-exclamation"></i>
+            </div>
+            <div class="activity-content">
+                <p>Approaching monthly quota limit (85%)</p>
+                <small>1 hour ago</small>
+            </div>
+        </div>
+
+        <div class="activity-item">
+            <div class="activity-icon">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="activity-content">
+                <p>New API key generated</p>
+                <small>3 hours ago</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="quick-actions">
+    <h2><i class="fas fa-rocket"></i> Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="{{ url_for('features') }}" class="action-btn">
+            <i class="fas fa-magic"></i>
+            <span>Explore Features</span>
+        </a>
+        <a href="{{ url_for('account') }}" class="action-btn">
+            <i class="fas fa-key"></i>
+            <span>API Keys</span>
+        </a>
+        <a href="{{ url_for('pricing') }}" class="action-btn">
+            <i class="fas fa-tag"></i>
+            <span>Upgrade Plan</span>
+        </a>
+    </div>
+</section>
+{% endblock %}

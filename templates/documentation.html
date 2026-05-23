@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | Neon Outreach</title>
+    <!-- Head content same as previous templates -->
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation same as previous templates -->
+
+    <div class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+                Developer Documentation
+            </h1>
+            <p class="mt-6 text-xl max-w-3xl mx-auto">
+                Everything you need to integrate with Neon Outreach
+            </p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid md:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="md:col-span-1">
+                <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+                    <h3 class="font-bold text-lg mb-4">Sections</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#getting-started" class="text-indigo-600 hover:underline">Getting Started</a></li>
+                        <li><a href="#authentication" class="text-indigo-600 hover:underline">Authentication</a></li>
+                        <li><a href="#endpoints" class="text-indigo-600 hover:underline">API Endpoints</a></li>
+                        <li><a href="#webhooks" class="text-indigo-600 hover:underline">Webhooks</a></li>
+                        <li><a href="#sdks" class="text-indigo-600 hover:underline">SDKs</a></li>
+                        <li><a href="#rate-limiting" class="text-indigo-600 hover:underline">Rate Limiting</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="md:col-span-3 space-y-12">
+                <section id="getting-started" class="bg-white p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Getting Started</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">API Base URL</h3>
+                            <div class="bg-gray-800 text-green-400 p-4 rounded-md font-mono text-sm">
+                                https://api.neonoutreach.com/v1
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Quick Start</h3>
+                            <pre class="bg-gray-800 text-gray-300 p-4 rounded-md overflow-x-auto text-sm">
+<code>curl -X POST \
+  https://api.neonoutreach.com/v1/campaigns \
+  -H 'Authorization: Bearer YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "My Campaign",
+    "template_id": "temp_1234"
+  }'</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other sections follow same pattern -->
+                <section id="authentication" class="bg-white p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Authentication</h2>
+                    <p class="mb-4">All API requests require an API key passed in the Authorization header:</p>
+                    <div class="bg-gray-800 text-gray-300 p-4 rounded-md font-mono text-sm mb-6">
+                        Authorization: Bearer YOUR_API_KEY
+                    </div>
+                    <p>Generate your API key from the <a href="#" class="text-indigo-600">Developer Settings</a> in your account dashboard.</p>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer same as previous templates -->
+</body>
+</html>

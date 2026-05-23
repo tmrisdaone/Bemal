@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outreach Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .results-table th, .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .results-table th {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+        
+        .status-success {
+            color: var(--success);
+        }
+        
+        .status-error {
+            color: var(--error);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .email-output {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin: 0.5rem 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: var(--dark);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-envelope-open-text"></i> Outreach Results</h1>
+        
+        <!-- Single Email Result Card -->
+        {% if results.single_result %}
+        <div class="card">
+            <h2>Single Prospect Result</h2>
+            <div class="email-output">
+                {{ results.single_result.email }}
+            </div>
+            <div class="action-buttons" style="margin-top: 1rem;">
+                <button class="btn" onclick="copyToClipboard(this, `{{ results.single_result.email }}`)">
+                    <i class="far fa-copy"></i> Copy Email
+                </button>
+                <span style="margin-left: 1rem; color: var(--gray);">
+                    Status: <span class="status-{{ 'success' if 'success' in results.single_result.status.lower() else 'error' }}">
+                        {{ results.single_result.status }}
+                    </span>
+                </span>
+                {% if results.single_result.cost %}
+                <span style="margin-left: 1rem; color: var(--gray);">
+                    Cost: ${{ results.single_result.cost }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Batch Results Card -->
+        {% if results.batch_results %}
+        <div class="card">
+            <h2>Batch Processing Results</h2>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prospect in results.batch_results %}
+                    <tr>
+                        <td>{{ prospect.name }}</td>
+                        <td>{{ prospect.company }}</td>
+                        <td class="status-{{ 'success' if 'sent' in prospect.status.lower() else 'error' }}">
+                            {{ prospect.status }}
+                        </td>
+                        <td>
+                            <button class="btn" onclick="showEmailModal(`{{ prospect.email }}`)">
+                                <i class="far fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 1rem;">
+                <button class="btn" onclick="downloadResults()">
+                    <i class="fas fa-download"></i> Download Full Report
+                </button>
+                <span style="margin-left: 1rem; color: var(--gray);">
+                    {{ results.batch_results|length }} processed 
+                    ({{ results.batch_results|selectattr('status', 'equalto', 'Sent')|list|count }} successful, 
+                    {{ results.batch_results|rejectattr('status', 'equalto', 'Sent')|list|count }} failed)
+                </span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Email Modal -->
+    <div id="emailModal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Email Preview</h2>
+                <button onclick="document.getElementById('emailModal').classList.add('hidden')" style="background: none; border: none; color: var(--gray); font-size: 1.5rem; cursor: pointer;">
+                    &times;
+                </button>
+            </div>
+            <div id="modalEmailContent" class="email-output"></div>
+            <div style="margin-top: 1rem;">
+                <button class="btn" id="modalSendBtn">
+                    <i class="far fa-paper-plane"></i> Send Email
+                </button>
+                <button class="btn" onclick="copyToClipboard(this, document.getElementById('modalEmailContent').textContent)" style="margin-left: 0.5rem;">
+                    <i class="far fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show email in modal
+        function showEmailModal(emailContent) {
+            document.getElementById('modalEmailContent').textContent = emailContent;
+            document.getElementById('emailModal').classList.remove('hidden');
+            
+            // Set up send button if we have the prospect data
+            const sendBtn = document.getElementById('modalSendBtn');
+            sendBtn.onclick = function() {
+                sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                // In a real app, you would send an AJAX request here
+                setTimeout(() => {
+                    showToast('Email sent successfully!');
+                    sendBtn.innerHTML = '<i class="fas fa-check"></i> Sent';
+                }, 1500);
+            };
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHtml = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalHtml;
+                }, 2000);
+                showToast('Copied to clipboard!');
+            });
+        }
+        
+        // Download results (mock implementation)
+        function downloadResults() {
+            showToast('Preparing download...');
+            // In a real app, this would generate and download a CSV
+            setTimeout(() => {
+                showToast('Download ready!', false);
+            }, 1000);
+        }
+        
+        // Toast notification
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.padding = '12px 24px';
+            toast.style.background = isError ? 'var(--error)' : 'var(--success)';
+            toast.style.color = 'white';
+            toast.style.borderRadius = '4px';
+            toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            toast.style.zIndex = '1000';
+            toast.style.animation = 'fadeIn 0.3s';
+            toast.innerHTML = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === document.getElementById('emailModal')) {
+                document.getElementById('emailModal').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
